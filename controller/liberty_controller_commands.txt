@@ -13,21 +13,36 @@ reboot
 
 ##### NTP Service #####
 echo "server 0.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
-echo "server 1.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
+echo "server 1.opensuse.pool.ntp.o rg iburst" >> /etc/ntp.conf
 echo "server 2.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
 echo "server 3.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
 systemctl enable ntpd.service
 systemctl start ntpd.service
+
+##### Create NAT for IP Forward #####
+===== Di Laptop Host =====
+nano /etc/sysctl.conf 
+net.ipv4.ip_forward=1
+sysctl -f
+iptables -t nat -L -v
+iptables -t nat -A POSTROUTING -s 10.10.10.0/24 -j MASQUERADE
+===== Delete IP Tables =====
+iptables -t nat -L -v --line-numbers
+iptables -t nat -D (nama chain) (number list)
+iptables -t nat -D POSTROUTING 2
 
 ##### Repositories #####
 zypper -n rm iproute2
 zypper in --no-recommends http://download.opensuse.org/update/13.2/x86_64/iproute2-3.16-2.7.1.x86_64.rpm
 zypper al iproute2
 zypper ar -f obs://Cloud:OpenStack:Liberty/openSUSE_Leap_42.1 Liberty
-zypper mr -era
-zypper --gpg-auto-import-keys ref && zypper -n up --skip-interactive
+zypper mr -R -all
+zypper mr -e -all
+zypper --gpg-auto-import-keys ref 
+zypper -n up --skip-interactive && zypper -n dist-upgrade
 reboot
 zypper -n in --no-recommends python-openstackclient
+zypper in --no-recomnededs http://download.opensuse.org/repositories/Cloud:/Eucalyptus/openSUSE_Leap_42.1/noarch/euca2ools-3.0.4-1.2.noarch.rpm
 
 ##### MySQL Database Service #####
 zypper -n in --no-recommends mysql-community-server mysql-community-server-client python-PyMySQL
