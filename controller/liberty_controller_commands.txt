@@ -13,7 +13,7 @@ reboot
 
 ##### NTP Service #####
 echo "server 0.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
-echo "server 1.opensuse.pool.ntp.o rg iburst" >> /etc/ntp.conf
+echo "server 1.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
 echo "server 2.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
 echo "server 3.opensuse.pool.ntp.org iburst" >> /etc/ntp.conf
 systemctl enable ntpd.service
